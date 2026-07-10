@@ -1,75 +1,89 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const cache = {};
 
 export const useFetch = (url) => {
-  const [state, setState] = useState({
-    data: null,
-    status: "idle",
-    error: null,
-  });
-
-  useEffect(() => {
-    if (!url) return;
-
-    // Si existe en caché
-    if (cache[url]) {
-      setState({
-        data: cache[url],
-        status: "success",
+    const [state, setState] = useState({
+        data: null,
+        isLoading: false,
         error: null,
-      });
-      return;
-    }
-
-    // Limpiar estado anterior
-    setState({
-      data: null,
-      status: "loading",
-      error: null,
     });
 
-    // Crear el controlador
-    const controller = new AbortController();
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url, {
-          signal: controller.signal,
-        });
+    // Esta función SIEMPRE consulta la API
+    const fetchData = useCallback(async () => {
+        if (!url) return;
 
-        if (!response.ok) {
-          throw new Error("Error en la petición");
+        setState(prev => ({
+            ...prev,
+            isLoading: true,
+            error: null,
+        }));
+
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok || response.status === 404) {
+                throw new Error("No hay resultado para tu búsqueda");
+            }
+
+            const data = await response.json();
+
+            // Guardamos la respuesta nueva
+            cache[url] = data;
+
+            setState({
+                data,
+                isLoading: false,
+                error: null,
+            });
+
+        } catch (error) {
+            setState({
+                data: null,
+                isLoading: false,
+                error: error.message,
+            });
         }
 
-        const data = await response.json();
+    }, [url]);
 
-        cache[url] = data;
 
-        setState({
-          data,
-          status: "success",
-          error: null,
-        });
-      } catch (error) {
-        // Ignorar si la petición fue cancelada
-        if (error.name === "AbortError") return;
+    // Carga automática con caché
+    useEffect(() => {
+        if (!url) {
+            setState({
+                data: null,
+                isLoading: false,
+                error: null,
+            });
+            return;
+        }
 
-        setState({
-          data: null,
-          status: "error",
-          error: error.message,
-        });
-      }
+        if (cache[url]) {
+            setState({
+                data: cache[url],
+                isLoading: false,
+                error: null,
+            });
+
+            return;
+        }
+
+        fetchData();
+
+    }, [url, fetchData]);
+
+
+    // Fuerza una consulta nueva
+    const refetch = () => {
+        if (!url) return;
+        delete cache[url];
     };
 
-    fetchData();
 
-    // Cleanup
-    return () => {
-      controller.abort();
+    return {
+        ...state,
+        refetch
     };
-  }, [url]);
-
-  return state;
 };
