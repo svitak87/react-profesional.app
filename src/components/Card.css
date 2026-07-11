@@ -1,4 +1,5 @@
 .card-container{
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-top: 50px;
@@ -49,6 +50,38 @@
     font-weight: bold;
 }
 
+.created-date{
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    font-size: 0.5rem;
+}
+
+.status-alive {
+    background-color: rgb(9, 206, 9);
+}
+
+.status-dead {
+    background-color: red;
+}
+
+.status-unknown {
+    background-color: gray;
+}
+
+.status-default {
+    background-color: black;
+}
+
+.status-alive,
+.status-dead,
+.status-unknown,
+.status-default {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
 @media(min-width: 768px){
     .card-container{
         flex-direction: row;
@@ -81,6 +114,10 @@
         width: 100%;
         height: 100%;
     }
+    .created-date{
+        bottom: 10px;
+        font-size: 0.7rem;
+    }
 }
 
 @media(min-width: 1250px){
@@ -92,5 +129,9 @@
         font-size: 1.8rem;
         line-height: 1.9rem;
         margin-bottom: -0.1rem;
+    }
+    .created-date{
+        bottom: 3px;
+        font-size: 0.6rem;
     }
 }

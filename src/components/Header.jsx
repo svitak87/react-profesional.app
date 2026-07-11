@@ -34,13 +34,6 @@ export const Header = () => {
           >
             <div className="offcanvas-header">
               <img src={asideLogo} alt="logo-brand" className="asideLogo"></img>
-              {/* <h5
-                className="offcanvas-title"
-                id="offcanvasDarkNavbarLabel"
-              >
-                Dark offcanvas
-              </h5> */}
-
               <button
                 type="button"
                 className="btn-close btn-close-white"
