@@ -1,17 +1,25 @@
+.icon {
+    width: clamp(4rem, 6vw, 3.5rem);
+    display: block;
+}
+
+.asideLogo{
+    width: clamp(8rem, 6vw, 3.5rem);
+}
+
+.btn{
+    background-color: #439740;
+}
+
 @media(min-width: 768px){
     .navbar{
         padding: 1.5rem;
     }
 }
 
-.icon {
-    width: clamp(2rem, 6vw, 3.5rem);
-    height: auto;
-    display: block;
-}
 
 @media (min-width: 992px) {
     .icon {
-        width: clamp(3rem, 4vw, 4rem);
+        width: clamp(4rem, 4vw, 4rem);
     }
 }

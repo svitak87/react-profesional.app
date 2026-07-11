@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { SearchContext } from '../context/SearchContext';
 import icon from '../assets/R&M-icon.png'
+import asideLogo from '../assets/aside-logo.png'
 
 import './Header.css'
 
@@ -32,12 +33,13 @@ export const Header = () => {
             aria-labelledby="offcanvasDarkNavbarLabel"
           >
             <div className="offcanvas-header">
-              <h5
+              <img src={asideLogo} alt="logo-brand" className="asideLogo"></img>
+              {/* <h5
                 className="offcanvas-title"
                 id="offcanvasDarkNavbarLabel"
               >
                 Dark offcanvas
-              </h5>
+              </h5> */}
 
               <button
                 type="button"
