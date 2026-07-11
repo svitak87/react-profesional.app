@@ -1,9 +1,9 @@
-
+import './Footer.css';
 export const Footer = () => {
 
     return (
-            <footer>
-                <p>&copy; 2026 My App. All rights reserved.</p>
+            <footer className="footer-container">
+                <p>&copy; 2026 - Hecho a mano con 🖤, por Óscar .</p>
             </footer>
     )
 }

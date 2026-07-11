@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 const cache = {};
 
@@ -8,11 +8,19 @@ export const useFetch = (url) => {
         isLoading: false,
         error: null,
     });
+    const controllerRef = useRef(null);
 
 
     // Esta función SIEMPRE consulta la API
     const fetchData = useCallback(async () => {
         if (!url) return;
+
+        if (controllerRef.current) {
+            controllerRef.current.abort();
+        }
+
+        const controller = new AbortController();
+        controllerRef.current = controller;
 
         setState(prev => ({
             ...prev,
@@ -21,7 +29,7 @@ export const useFetch = (url) => {
         }));
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { signal: controller.signal });
 
             if (!response.ok || response.status === 404) {
                 throw new Error("No hay resultado para tu búsqueda");
@@ -39,11 +47,19 @@ export const useFetch = (url) => {
             });
 
         } catch (error) {
+            if (error.name === "AbortError") {
+                return;
+            }
+
             setState({
                 data: null,
                 isLoading: false,
                 error: error.message,
             });
+        } finally {
+            if (controllerRef.current === controller) {
+                controllerRef.current = null;
+            }
         }
 
     }, [url]);
@@ -72,6 +88,12 @@ export const useFetch = (url) => {
 
         fetchData();
 
+        return () => {
+            if (controllerRef.current) {
+                controllerRef.current.abort();
+                controllerRef.current = null;
+            }
+        };
     }, [url, fetchData]);
 
 
@@ -79,6 +101,7 @@ export const useFetch = (url) => {
     const refetch = () => {
         if (!url) return;
         delete cache[url];
+        fetchData();
     };
 
 

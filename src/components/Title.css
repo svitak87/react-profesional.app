@@ -1,0 +1,26 @@
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #181818;
+    text-align: center;
+    min-height: 400px;
+    padding: 6rem 1.5rem 2rem;
+    box-sizing: border-box;
+}
+
+.title {
+    margin: 0;
+    font-size: clamp(3rem, 6vw, 9rem);
+    line-height: 1.05;
+    font-weight: 900;
+    color: #24243b;
+    text-align: center;
+}
+
+@media (min-width: 1250px) {
+    .title-container {
+        padding: 7rem 1rem 3rem;
+    }
+}

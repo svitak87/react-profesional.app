@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useFetch } from '../hooks/useFetch';
 import { useDebounce } from '../hooks/useDebounce';
+import { SearchContext } from '../context/SearchContext';
 
+import { Cards } from './Cards.jsx'
 import { Spinner } from './Spinner';
 
+import './SearchBoard.css'
+
 export const SearchBoard = () => {
-    const [searchValue, setSearchValue] = useState("");
-    const debounceValue = useDebounce(searchValue, 500)
+    const { search, setSearch } = useContext(SearchContext)
+    const debounceValue = useDebounce(search, 500)
 
     const url = debounceValue
         ? `https://rickandmortyapi.com/api/character?name=${debounceValue}`
@@ -17,14 +21,19 @@ export const SearchBoard = () => {
 
     return (
         <>
-            <form action="">
-                <label htmlFor="">Busca un personaje</label>
+            <form action="" className="form-container" onSubmit={(e) => e.preventDefault()}>
                 <input
-                    type="text"
-                    value={searchValue}
-                    onChange={(event) => setSearchValue(event.target.value)}
+                    id="search"
+                    className="input-search"
+                    type="search"
+                    role="search"
+                    aria-label="Search"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Busca un personaje"
                 />
                 <button
+                    className='navbar-toggler'
                     disabled={!url}
                     type="button"
                     onClick={refetch}
@@ -33,17 +42,8 @@ export const SearchBoard = () => {
                 </button>
             </form>
             {isLoading && <Spinner />}
+            <Cards data={data} />
             {error && <p>{error}</p>}
-            {data && (
-                <ul>
-                    {data.results.map((character) => (
-                        <li key={character.id}>
-                            <p>{character.name}</p>
-                            <img src={character.image} alt={character.name} />
-                        </li>
-                    ))}
-                </ul>
-            )}
         </>
     )
 }

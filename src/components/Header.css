@@ -1,0 +1,17 @@
+@media(min-width: 768px){
+    .navbar{
+        padding: 1.5rem;
+    }
+}
+
+.icon {
+    width: clamp(2rem, 6vw, 3.5rem);
+    height: auto;
+    display: block;
+}
+
+@media (min-width: 992px) {
+    .icon {
+        width: clamp(3rem, 4vw, 4rem);
+    }
+}
